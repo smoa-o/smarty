@@ -349,3 +349,90 @@ A (CPU)            C (External Device)
 still not ready, it may return BSY or LBSY (TBSY is not issued here).
 If latency is critically high, device issues TBSY and forcibly clears
 data immediately.
+
+## Signal Table Format
+
+Extracted directly from Verilog module ports.
+
+| Signal Name | Direction | Width | Active | Driver | Receiver | Description |
+|-------------|-----------|-------|--------|--------|----------|-------------|
+| CLK | IN/OUT | 1 | Posedge | clock | <all> | Clock Signal |
+| RST | OUT | 1 | High | clock | <all> | Reset Signal |
+| RADSYN | OUT | 1 | High | <any> | <any> | Read Address Synchronization |
+| ROPSYN | OUT | 1 | High | <any> | <any> | Read Operation Length Synchronization |
+| RRGSYN | OUT | 1 | High | <any> | <any> | Read Register Synchronization |
+| WADSYN | OUT | 1 | High | <any> | <any> | Write Address Synchronization |
+| WRGSYN | OUT | 1 | High | <any> | <any> | Write Register Synchronization |
+| RADACK | IN | 1 | High | <any> | <any> | Read Address Acknowledgement |
+| ROPACK | IN | 1 | High | <any> | <any> | Read Operation Length Acknowledgement |
+| RRGACK | IN | 1 | High | <any> | <any> | Read Register Acknowledgement |
+| WADACK | IN | 1 | High | <any> | <any> | Write Address Acknowledgement |
+| WRGACK | IN | 1 | High | <any> | <any> | Write Register Acknowledgement |
+| RADFIN | IN | 1 | High | <any> | <any> | Read Address Finish |
+| ROPFIN | IN | 1 | High | <any> | <any> | Read Operation Length Finish |
+| RRGFIN | IN | 1 | High | <any> | <any> | Read Register Finish |
+| WADFIN | IN | 1 | High | <any> | <any> | Write Address Finish |
+| WRGFIN | IN | 1 | High | <any> | <any> | Write Register Finish |
+| RADCLN | OUT | 1 | Posedge | <any> | <any> | Read Address Cleanable |
+| ROPCLN | OUT | 1 | Posedge | <any> | <any> | Read Operation Length Cleanable |
+| RRGCLN | OUT | 1 | Posedge | <any> | <any> | Read Register Cleanable |
+| WADCLN | OUT | 1 | Posedge | <any> | <any> | Write Address Cleanable |
+| WRGCLN | OUT | 1 | Posedge | <any> | <any> | Write Register Cleanable |
+| RADRADA | OUT | 16 | When RADSYN | <any> | <any> | Readed Address, Passage A |
+| ROPIID | OUT | 8 | When RADSYN | <any> | <any> | Readed Instruction ID |
+| RRGRADA | OUT | 16 | When RADSYN | <any> | <any> | Readed Register, Passage A |
+| WADRADA | OUT | 16 | When RADSYN | <any> | <any> | Writed Address, Passage A |
+| WRGRADA | OUT | 16 | When RADSYN | <any> | <any> | Writed Register, Passage A |
+| RADRADB | OUT | 16 | When RADSYN | <any> | <any> | Readed Address, Passage B |
+| RRGRADB | OUT | 16 | When RADSYN | <any> | <any> | Readed Register, Passage B |
+| WADRADB | OUT | 16 | When RADSYN | <any> | <any> | Writed Address, Passage B |
+| WRGRADB | OUT | 16 | When RADSYN | <any> | <any> | Writed Register, Passage B |
+| RADRDTA | IN | 8 | When RADSYN | <any> | <any> | Readed Data, Passage A |
+| ROPOUT | IN | 2 | When RADSYN | <any> | <any> | Readed Operation Length |
+| RRGRDTA | IN | 16 | When RADSYN | <any> | <any> | Readed Data, Passage A |
+| WADRDTA | OUT | 8 | When RADSYN | <any> | <any> | Writed Data, Passage A |
+| WRGRDTA | OUT | 16 | When RADSYN | <any> | <any> | Writed Data, Passage A |
+| RADRDTB | IN | 8 | When RADSYN | <any> | <any> | Readed Data, Passage B |
+| RRGRDTB | IN | 16 | When RADSYN | <any> | <any> | Readed Data, Passage B |
+| WADRDTB | OUT | 8 | When RADSYN | <any> | <any> | Writed Data, Passage B |
+| WRGRDTB | OUT | 16 | When RADSYN | <any> | <any> | Writed Data, Passage B |
+| RADRECA | IN | 8 | When RADSYN | <any> | <any> | Reading Error Code, Passage A |
+| RRGRECA | IN | 8 | When RADSYN | <any> | <any> | Reading Error Code, Passage A |
+| WADRECA | IN | 8 | When RADSYN | <any> | <any> | Writing Error Code, Passage A |
+| WRGRECA | IN | 8 | When RADSYN | <any> | <any> | Writing Error Code, Passage A |
+| RADRECB | IN | 8 | When RADSYN | <any> | <any> | Reading Error Code, Passage B |
+| RRGRECB | IN | 8 | When RADSYN | <any> | <any> | Reading Error Code, Passage B |
+| WADRECB | IN | 8 | When RADSYN | <any> | <any> | Writing Error Code, Passage B |
+| WRGRECB | IN | 8 | When RADSYN | <any> | <any> | Writing Error Code, Passage B |
+| (other...) | | | | | | |
+
+# 8. Exception and Recovery
+
+## Error Classification
+
+| Level | Type | Handling |
+|-------|------|----------|
+| Recoverable | Logged fault | Write status register, arbitrated by Retire |
+| Fatal | Hardware error (INVSTP, TMOUT, ...) | Direct RST assertion |
+
+## Timeout Handling
+
+- Short Four-Echo: timeout -\> TMOUT signal -\> RST or retry (configurable)
+- Three-Party: forwarder timeout -\> return failure to caller
+- Long Four-Echo: BSY/LBSY/TBSY graded response
+
+## Retry Strategy
+
+| Scenario | Retry Count | Action on Exhaust |
+|----------|-------------|-------------------|
+| Short Four-Echo | ? | TMOUT -\> RST |
+| Long Four-Echo LBSY | ? | Abort or degrade |
+| Long Four-Echo TBSY | 0 (no retry) | Immediate termination |
+
+## Pipeline Flush Conditions
+
+| Trigger | Scope | Description |
+|---------|-------|-------------|
+| RST asserted | Full pipeline | Immediately flush all stages |
+| Retire fault | Current instruction | Clear current and subsequent |
+| CU protocol error | Related stages | Clear affected stages |
