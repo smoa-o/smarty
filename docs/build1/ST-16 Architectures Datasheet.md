@@ -657,35 +657,36 @@ Nothing.
 | 0x27 | iret | 0 | - | Return interrupting (move cpu.r1 and jump) |
 | 0x28 | hlt | 0 | - | Halt when interrupting |
 | 0x29 | in | 2 | rr mr rm mm ri mi ir im ii | In source to I/O Port destination |
-| 0x29 | out | 2 | rr mr rm mm ri mi ir im ii | Out source to I/O Port destination |
+| 0x2a | out | 2 | rr mr rm mm ri mi ir im ii | Out source to I/O Port destination |
 
 ### Optimized
 
-- [Moving Optimizing, 0x29~0x2f] mov <OR-A>
-- [Stack Optimizing, 0x30~0x4c]
+- [Moving Optimizing, 0x2a~0x30] mov <OR-A>
+- [Stack Optimizing, 0x31~0x4d]
 	push cfg.csp, <OR-A>
 	push cfg.dsp, <OR-A>
 	pop <OR-A>, cfg.csp
 	pop <OR-A>, cfg.dsp
-- [Arithmetic Optimizing, 0x4d~0x5d]
+- [Arithmetic Optimizing, 0x4e~0x5e]
 	add <OR-A>, ...
 	sub <OR-A>, ...
 	shl <OR-A>, ...
 	shr <OR-A>, ...
-- [Unary Arithmetic Optimizing, 0x5e~0x6a]
+- [Unary Arithmetic Optimizing, 0x5f~0x6b]
 	inc <OR-A>
 	dec <OR-A>
 	not <OR-A>
-- [Jumping Optimizing, 0x6b~0x77]
+- [Jumping Optimizing, 0x6c~0x78]
 	jmp <OR-A>
 	jz <OR-A>
 	jc <OR-A>
-- [Calling Optimizing, 0x78~0x7f]
+- [Calling Optimizing, 0x79~0x7f]
 	call <OR-A>
-	int <OR-B>
+	int <OR-C>
 
-- Optimized Register A (OR-A): ax bx cx dx cpu.r0 cpu.r1 bp
-- Optimized Register B (OR-B): ax bx cx dx cpu.r0 cpu.r1
+- Optimized Registers A (OR-A): ax bx cx dx cpu.r0 cpu.r1 bp
+- Optimized Registers B (OR-B): ax bx cx dx cpu.r0 cpu.r1
+- Optimized Registers C (OR-C): ax bx cx cpu.r0 cpu.r1
 
 ## Microcode Table
 
