@@ -460,6 +460,8 @@ registers, width, access ports, and reset behavior.
 | 0x9   | cfg.ip  | w  | 0           | R      | (SPR)       | instruction pointer |
 | 0xa   | cfg.csp | w  | 0           | RW     | (GPR)       | call stack pointer |
 | 0xb   | cfg.dsp | w  | 0           | RW     | (GPR)       | data stack pointer |
+| 0xb   | cfg.flg | w  | 0           | R      | (SPR)       | flags |
+| 0xc   | cpu.rst | w  | 0           | R      | (SPR)       | need reset |
 
 ### Register Detailed Description
 
@@ -485,7 +487,7 @@ registers, width, access ports, and reset behavior.
 
 ### Access Constraints
 
-Nothing.
+- Hardware is readable and writable in anything.
 
 ### Aliases and Mirrored Registers
 
