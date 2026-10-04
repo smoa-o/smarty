@@ -406,22 +406,22 @@ Extracted directly from Verilog module ports.
 | WRGRECB | IN | 8 | When RADSYN | <any> | <any> | Writing Error Code, Passage B |
 | (other...) | | | | | | |
 
-# 8. Exception and Recovery
+## Exception and Recovery
 
-## Error Classification
+### Error Classification
 
 | Level | Type | Handling |
 |-------|------|----------|
 | Recoverable | Logged fault | Write status register, arbitrated by Retire |
 | Fatal | Hardware error (INVSTP, TMOUT, ...) | Direct RST assertion |
 
-## Timeout Handling
+### Timeout Handling
 
 - Short Four-Echo: timeout -\> TMOUT signal -\> RST or retry (configurable)
 - Three-Party: forwarder timeout -\> return failure to caller
 - Long Four-Echo: BSY/LBSY/TBSY graded response
 
-## Retry Strategy
+### Retry Strategy
 
 | Scenario | Retry Count | Action on Exhaust |
 |----------|-------------|-------------------|
@@ -429,10 +429,137 @@ Extracted directly from Verilog module ports.
 | Long Four-Echo LBSY | ? | Abort or degrade |
 | Long Four-Echo TBSY | 0 (no retry) | Immediate termination |
 
-## Pipeline Flush Conditions
+### Pipeline Flush Conditions
 
 | Trigger | Scope | Description |
 |---------|-------|-------------|
 | RST asserted | Full pipeline | Immediately flush all stages |
 | Retire fault | Current instruction | Clear current and subsequent |
 | CU protocol error | Related stages | Clear affected stages |
+
+## Register File
+
+### Overview
+
+Brief description of the register file organization: total number of
+registers, width, access ports, and reset behavior.
+
+### Register Map Summary
+
+| Index | Name | Width | Reset Value | Access | Category | Brief |
+|-------|------|-------|-------------|--------|----------|-------|
+| 0x0   | ax   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x1   | bx   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x2   | cx   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x3   | dx   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x4   | ex   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x5   | fx   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x6   | gx   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x7   | hx   | b w   | 0           | RW     | (GPR)       | (null) |
+| 0x8   | bp   | b w   | 0           | RW     | (GPR)       | base pointer |
+| 0x9   | cfg.ip  | w  | 0           | R      | (SPR)       | instruction pointer |
+| 0xa   | cfg.csp | w  | 0           | RW     | (GPR)       | call stack pointer |
+| 0xb   | cfg.dsp | w  | 0           | RW     | (GPR)       | data stack pointer |
+
+### Register Detailed Description
+
+#### [Group: GPR]
+
+**Description:** General Purpose Register
+
+**Access Rules:**
+
+- Read: anyone
+- Write: anyone
+- Hardware may clear: When RST
+
+#### [cfg.ip]
+
+**Description:** Instruction Pointer
+
+**Access Rule:**
+
+- Read: anyone
+- Write: hardware (use special instruction)
+- Hardware may clear: When RST
+
+### Access Constraints
+
+Nothing.
+
+### Aliases and Mirrored Registers
+
+Nothing.
+
+### Reset Behavior
+
+| Register Group | Reset Value | Reset Source |
+|----------------|-------------|--------------|
+| Default        | 0           | RST          |
+
+## Instruction Encoding
+
+### Summary - [Null]
+
+| Name | Length | Conditions | Description |
+| ---- | ------ | --------- | ----------- |
+| Insh. | 8b/12b | true     | See Below   |
+| Rsvd? | 4b    | ?hasvn    | Reserved    |
+
+### Summary - [Unary]
+
+| Name | Length | Conditions | Description |
+| ---- | ------ | --------- | ----------- |
+| Insh. | 8b/12b | true     | See Below   |
+| AType | 4b    | true      | Argument Type |
+| Arg  | 8b/16b | true      | Argument    |
+
+**Notes**
+> 1. hasvn must be 1.
+> 2. The *Arg* type is *AType*
+
+### Summary - [Binary]
+
+| Name | Length | Conditions | Description |
+| ---- | ------ | --------- | ----------- |
+| Insh. | 8b/12b | true     | See Below   |
+| AType? | 4b   | ?hasvn    | Overall Type |
+| Types | 8b    | true      | The Types   |
+| ArgA | 8b/16b | true      | Argument A  |
+| ArgB | 8b/16b | true      | Argument B  |
+
+**Notes**
+> 1. The *ArgA* type is *Types* [7:4]
+> 2. The *ArgB* type is *Types* [3:0]
+
+### Type Encoding
+
+| Name | Length | Conditions | Description |
+| ---- | ------ | --------- | ----------- |
+| Width | 2b    | true      | (empty)     |
+| Type | 2b     | true      | (empty)     |
+
+### Insh. Encoding
+
+> *Insh.* means the instruction header.
+
+**Encoding:**
+
+| Name | Length | Conditions | Description |
+| ---- | ------ | --------- | ----------- |
+| Inst. | 7b    | true      | The Instruction Type |
+| hasvn. | 1b   | true      | Has Variant |
+| variant? | 4b | ?hasvn    | The Variant |
+
+**Notes**
+> Instruction Table: see Annex
+
+#### Variant? Encoding
+
+| Name | Length | Conditions | Description |
+| ---- | ------ | --------- | ----------- |
+| Fum. | 1b | true | (empty) |
+| Rsvd. | 3b    | true       | (empty)    |
+
+**Notes**
+> *Fum.* means *Flags Unmodifiable*
