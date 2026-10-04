@@ -656,6 +656,8 @@ Nothing.
 | 0x26 | int | 1 | r m i | Interrupt source (move cpu.r1 and jump) |
 | 0x27 | iret | 0 | - | Return interrupting (move cpu.r1 and jump) |
 | 0x28 | hlt | 0 | - | Halt when interrupting |
+| 0x29 | in | 2 | rr mr rm mm ri mi ir im ii | In source to I/O Port destination |
+| 0x29 | out | 2 | rr mr rm mm ri mi ir im ii | Out source to I/O Port destination |
 
 ### Optimized
 
@@ -663,8 +665,8 @@ Nothing.
 - [Stack Optimizing, 0x30~0x4c]
 	push cfg.csp, <OR-A>
 	push cfg.dsp, <OR-A>
-	pop cfg.csp, <OR-A>
-	pop cfg.dsp, <OR-A>
+	pop <OR-A>, cfg.csp
+	pop <OR-A>, cfg.dsp
 - [Arithmetic Optimizing, 0x4d~0x5d]
 	add <OR-A>, ...
 	sub <OR-A>, ...
@@ -681,6 +683,9 @@ Nothing.
 - [Calling Optimizing, 0x78~0x80]
 	call <OR-A>
 	int <OR-A>
+- [I/O Port Optimizing, 0x81~0x89]
+	in ..., <OR-A>
+	out <OR-A>, ...
 
 - Optimized Register A (OR-A): ax bx cx dx cpu.r0 cpu.r1 bp
 
