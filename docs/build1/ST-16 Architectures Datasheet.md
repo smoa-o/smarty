@@ -724,6 +724,7 @@ require multiple microcodes from the set below.
 ### At [cfg.flg]
 
 | Bit | Mnemonic |
+| --- | -------- |
 | 7 | ZF |
 | 6 | CF |
 | 5 | AF |
@@ -732,3 +733,23 @@ require multiple microcodes from the set below.
 | 2 | Rsvd. |
 | 1 | Rsvd. |
 | 0 | Rsvd. |
+
+## Width/Type Table
+
+### Width
+
+| Key | Brief |
+| --- | ----- |
+| 0   | byte,b |
+| 1   | word,w |
+| 2   | *Rsvd.* |
+| 3   | *Rsvd.* |
+
+### Type
+
+| Key | Brief |
+| --- | ----- |
+| 0   | reg,r |
+| 1   | mem,m |
+| 2   | imm,i |
+| 3   | *Rsvd.* |
