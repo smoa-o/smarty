@@ -680,14 +680,12 @@ Nothing.
 	jmp <OR-A>
 	jz <OR-A>
 	jc <OR-A>
-- [Calling Optimizing, 0x78~0x80]
+- [Calling Optimizing, 0x78~0x7f]
 	call <OR-A>
-	int <OR-A>
-- [I/O Port Optimizing, 0x81~0x89]
-	in ..., <OR-A>
-	out <OR-A>, ...
+	int <OR-B>
 
 - Optimized Register A (OR-A): ax bx cx dx cpu.r0 cpu.r1 bp
+- Optimized Register B (OR-B): ax bx cx dx cpu.r0 cpu.r1
 
 ## Microcode Table
 
