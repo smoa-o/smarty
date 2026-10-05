@@ -246,7 +246,6 @@ Caller (A) Forwarder (B)
 |<-------fin&data----|
 |                    |
 |----cln------------>|
-|<--------------ack--|
 ```
 
 Exception timing:
@@ -320,7 +319,6 @@ A (CPU)            C (External Device)
 |<-------fin&data----|  (done, data valid)
 |                    |
 |----cln------------>|  (clear data)
-|<--------------ack--|
 ```
 
 #### ACK Phase Status Responses
@@ -443,6 +441,13 @@ Extracted directly from Verilog module ports.
 
 Brief description of the register file organization: total number of
 registers, width, access ports, and reset behavior.
+
+The register file provides 2 read ports and 2 write ports (2R2W), allowing simultaneous reads by Fetch
+(cfg.ip) and Execute (source operand) without port conflict in single-thread mode. IMEM provides 2R2W
+access for similar reasons.
+
+In single-thread mode, the 2R2W organization eliminates read port contention between Fetch and Execute
+stages. Multi-thread arbitration (v2) will be defined separately.
 
 ### Register Map Summary
 
@@ -699,24 +704,23 @@ implementation-defined; this section only specifies the minimum μop set that mu
 stage. Complex instructions (e.g., *call* , *int* , *push* / *pop*  with stack pointer auto-update)
 require multiple microcodes from the set below.
 
-| Recommended Mnemonic | Service |
-| -------- | ------- |
-| xrad | IMEM |
-| xwad | IMEM |
-| xrrg | Regfile |
-| xwrg | Regfile |
-| xjmp | IMEM+ |
-| xjcc | IMEM Regfile+ |
-| xadd | ALU |
-| xsub | ALU |
-| xand | ALU |
-| xor | ALU |
-| xnot | ALU |
-| xxor | ALU |
-| xxnor | ALU |
-| xshl | ALU |
-| xshr | ALU |
-| xhlt | Regfile+ |
+| Recommended Mnemonic | Service | Brief |
+| -------- | ------- | ------ |
+| xrad | IMEM | Read Address |
+| xwad | IMEM | Write Address |
+| xrrg | Regfile | Read Register |
+| xwrg | Regfile | Write Register |
+| xjmp | IMEM+ | Jump to address |
+| xjcc | IMEM Regfile+ | Jump if condition |
+| xadd | ALU | Calculate the cumulative sum of arguments |
+| xsub | ALU | Calculate arguments differences |
+| xand | ALU | Bitwise AND of arguments |
+| xor | ALU | Bitwise OR of arguments |
+| xnot | ALU | Bitwise NOT of argument(s) |
+| xxor | ALU | Bitwise XORed of arguments |
+| xshl | ALU | Argument(s) shift to the left |
+| xshr | ALU | Argument(s) shift to the right |
+| xhlt | Regfile+ | Waiting interrupt |
 
 ## Flags Distribution
 
