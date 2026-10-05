@@ -2,6 +2,8 @@
 
 ## Introduction
 
+<!-- For DS -->
+
 This document describes the microarchitecture and internal communication protocol of a CPU core built
 around a five-stage in-order pipeline, controlled by a centralized Control Unit (CU). The CU orchestrates
 pipeline progression stage by stage and coordinates intra-component communication via the Short Four-Echo
@@ -18,6 +20,9 @@ Design Goals:
 - Reliable intra-chip communication - four-way handshake with explicit completion acknowledgment
 
 ## Pipeline Architecture
+
+<!-- Pipeline Architecture.Five Stage Assembly Line.*.Service Requests For EDS -->
+<!-- Others For DS -->
 
 ### Five Stage Assembly Line
 
@@ -202,6 +207,9 @@ Pre-decode stage is eliminated from the pipeline sequence.
 
 ## Communication Protocols
 
+<!-- Timing For EDS -->
+<!-- Others For DS -->
+
 ### Introduction
 
 The architecture defines three communication protocols, classified by
@@ -350,6 +358,8 @@ data immediately.
 
 ## Signal Table Format
 
+<!-- For EDS -->
+
 Extracted directly from Verilog module ports.
 
 | Signal Name | Direction | Width | Active | Driver | Receiver | Description |
@@ -406,7 +416,11 @@ Extracted directly from Verilog module ports.
 
 ## Exception and Recovery
 
+<!-- Need Specifiec -->
+
 ### Error Classification
+
+<!-- For DS -->
 
 | Level | Type | Handling |
 |-------|------|----------|
@@ -415,11 +429,15 @@ Extracted directly from Verilog module ports.
 
 ### Timeout Handling
 
+<!-- For EDS -->
+
 - Short Four-Echo: timeout -\> TMOUT signal -\> RST or retry (configurable)
 - Three-Party: forwarder timeout -\> return failure to caller
 - Long Four-Echo: BSY/LBSY/TBSY graded response
 
 ### Retry Strategy
+
+<!--For EDS -->
 
 | Scenario | Retry Count | Action on Exhaust |
 |----------|-------------|-------------------|
@@ -429,6 +447,8 @@ Extracted directly from Verilog module ports.
 
 ### Pipeline Flush Conditions
 
+<!-- For EDS -->
+
 | Trigger | Scope | Description |
 |---------|-------|-------------|
 | RST asserted | Full pipeline | Immediately flush all stages |
@@ -436,6 +456,8 @@ Extracted directly from Verilog module ports.
 | CU protocol error | Related stages | Clear affected stages |
 
 ## Register File
+
+<!-- Others For SDM -->
 
 ### Overview
 
@@ -483,6 +505,8 @@ stages. Multi-thread arbitration (v2) will be defined separately.
 
 #### [cfg.ip]
 
+<!-- [Group: SPR] In SDM, Precisions for EDS -->
+
 **Description:** Instruction Pointer
 
 **Access Rule:**
@@ -493,19 +517,28 @@ stages. Multi-thread arbitration (v2) will be defined separately.
 
 ### Access Constraints
 
+<!-- For EDS -->
+
 - Hardware is readable and writable in anything.
 
 ### Aliases and Mirrored Registers
 
+<!-- For EDS -->
+
 Nothing.
 
 ### Reset Behavior
+
+<!-- For EDS -->
 
 | Register Group | Reset Value | Reset Source |
 |----------------|-------------|--------------|
 | Default        | 0           | RST          |
 
 ## Instruction Encoding
+
+<!-- For ORM, But provide reference externally -->
+<!-- All Reference For DS -->
 
 ### Summary - [Null]
 
@@ -576,6 +609,8 @@ Nothing.
 
 ## Electrical and Timing Characteristics
 
+<!-- For EDS -->
+
 ### Clock Characteristics
 
 | Parameter | Symbol | Min | Typ | Max | Unit | Condition | Description |
@@ -616,7 +651,11 @@ Nothing.
 
 ## Instruction Table
 
+<!-- For ORM, But provide reference externally -->
+
 ### Basic
+
+<!-- This reference for SDM -->
 
 | Opcode | Mnemonic | Arguement Length | Supported Argument Combination | Note |
 | ------ | -------- | ---------------- | ------------------------------ | ---- |
@@ -695,6 +734,8 @@ Nothing.
 
 ## Microcode Table
 
+<!-- For ORM -->
+
 The following micro-operations are guaranteed to be supported by the Execute stage.
 Implementation details including storage format, sequencing, and expansion strategy are not
 specified and may vary between implementations.
@@ -724,6 +765,12 @@ require multiple microcodes from the set below.
 
 ## Flags Distribution
 
+<!-- Unspecifiec -->
+
+<!-- Flag Impact Table -> ORM -->
+<!-- Flag Bit Table -> EDS -->
+<!-- Software get/set flags -> SDM -->
+
 ### At [cfg.flg]
 
 | Bit | Mnemonic |
@@ -738,6 +785,8 @@ require multiple microcodes from the set below.
 | 0 | Rsvd. |
 
 ## Width/Type Table
+
+<!-- For ORM (In Instruction Encoding) -->
 
 ### Width
 
