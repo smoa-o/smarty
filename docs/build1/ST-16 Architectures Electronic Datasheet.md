@@ -62,6 +62,8 @@ Role definitions:
 - B: Forwarder
 - C: Callee
 
+For usage scenarios and protocol selection, see `Datasheet`.
+
 ### Short Four-Echo
 
 Flow: syn -> ack -> fin&data -> cln
@@ -87,7 +89,7 @@ Exception timing:
 
 ### Three-Party Four-Echo
 
-#### Forwarding Variant (\u638c\u53d1\u79bb / Wo-Fa-Li)
+#### Forwarding Variant
 
 B participates in every transaction as full forwarder. Four phases:
 handshake -> send -> depart.
@@ -127,6 +129,45 @@ B <ack- A
 
 Note: In the direct variant, B does not participate in Phases 2–4 and
 only performs initial introduction.
+
+
+#### Direct Variant
+
+B only participates in initial handshake, then exits. A and C communicate
+directly thereafter. Four phases: handshake → exit → send.
+
+```
+Phase 1: Handshake establishment
+A -syn+gms> B
+B <ack- A
+B -syn!> C
+C <!ack- B
+
+Phase 2: B exits; A/C communicate directly (exactly two snd rounds)
+A -snd>> C
+C <<ack- A
+A -snd>> C
+C <<ack- A
+
+Phase 3: Completion return
+C <<fin+data- A
+A -ack>> C
+Phase 4: Cleanup
+A -cln>> C
+```
+
+Note: In the direct variant, B does not participate in Phases 2–4 and
+only performs initial introduction.
+
+#### Protocol Comparison
+
+| | Short | Forwarding | Direct |
+|-|-------|---------------------|-----------------|
+| Parties | A ↔ B | A ↔ B ↔ C | A ↔ B ↔ C (then A ↔ C) |
+| B role | Server | Full forwarder | Introduction only |
+| Data path | A–B | A–B–C round-trip | A–C direct |
+| Latency | Lowest | Highest (2 hops/step) | Medium |
+| Use case | Component↔CU | C only reachable via B | C supports direct link to A |
 
 ### Long Four-Echo
 
@@ -271,6 +312,36 @@ Extracted directly from Verilog module ports.
 - Write: hardware (use special instruction)
 - Hardware may clear: When RST
 
+#### [cpu.*]
+
+**Description:** CPU Registers
+
+**Default Access Rule:**
+
+- Read: anyone
+- Write: hardware (use special instruction)
+- Hardware may clear: When RST
+
+#### [cpu.r0]
+
+**Description:** CPU Flag
+
+**Bit Map:**
+
+| offset | name | description |
+| ------ | ---- | ----------- |
+| 7 | RF | Retire Failed |
+| ... | Rsvd. | Reserved |
+
+**Access Rule**:
+
+- Read: hardware
+- Write: hardware
+
+### [cpu.r1]
+
+**Description:** Interrupting Return Address, IRA.
+
 ### Access Constraints
 
 - Hardware is readable and writable in anything.
@@ -339,3 +410,114 @@ Nothing.
 | 2 | Rsvd. |
 | 1 | Rsvd. |
 | 0 | Rsvd. |
+
+## Stack Architecture
+
+### Overview
+
+The architecture defines two independent hardware-managed stacks, each growing
+downward with unaligned, contiguous storage. Every stack entry is self-describing:
+data is immediately followed by a 1-byte width tag. No alignment padding is
+inserted between entries.
+
+| Stack | Pointer | Width | Purpose |
+|-------|---------|-------|---------|
+| Call Stack | cfg.csp | 16-bit | Return addresses (call/ret/int/iret) |
+| Data Stack | cfg.dsp | 16-bit | Data operands (push/pop) |
+
+### Storage Layout
+
+Each stack grows toward lower addresses. A push operation writes data first,
+then the width tag immediately below it. The stack pointer (csp or dsp) always
+points to the lowest valid entry's width byte after a push completes.
+
+Memory layout after a push (higher addresses above):
+
+```
+[width_byte]    <- SP + data_width
+[data]          <- SP
+```
+
+Width encoding follows the Width Table (see Operation Reference Manual):
+
+| Value | Meaning |
+|-------|---------|
+| 0x00  | byte (1 byte) |
+| 0x01  | word (2 bytes) |
+
+### Push Behavior
+
+1. Decrement SP by data width.
+2. Write data to [SP].
+3. Decrement SP by 1.
+4. Write width byte to [SP].
+
+Resulting SP movement:
+
+| Data Width | Total SP Decrement |
+|------------|-------------------|
+| byte       | 2                 |
+| word       | 3                 |
+
+### Pop Behavior
+
+1. Read width byte from [SP].
+2. Increment SP by 1.
+3. Read data from [SP] using width to determine byte count.
+4. Increment SP by data width.
+
+### Call Stack Operations
+
+#### call
+
+Push return address (cfg.ip) onto call stack:
+
+- Data: cfg.ip (word, 2 bytes)
+- Width tag: 0x01
+- Total SP decrement: 3
+
+#### ret
+
+Pop return address from call stack:
+
+- Read width byte (expected 0x01)
+- Restore cfg.ip from stack data
+- Total SP increment: 3
+
+#### int
+
+Push return address onto call stack (same layout as call), then redirect cfg.ip
+to interrupt vector target.
+
+#### iret
+
+Pop return address from call stack, restore cfg.ip. Additional behavior defined
+by interrupt handling specification.
+
+### Data Stack Operations
+
+#### push
+
+Push source operand onto data stack. Width tag determined by operand type
+(byte or word). Supported source forms: register, memory, immediate.
+
+#### pop
+
+Pop value from data stack. Width is read from the tag; destination receives
+data truncated or zero-extended according to destination width.
+
+### Reset Behavior
+
+| Pointer | Reset Value | Reset Source |
+|---------|-------------|--------------|
+| cfg.csp | 0           | RST          |
+| cfg.dsp | 0           | RST          |
+
+### Notes
+
+- Stack operations are not atomic at the micro-architecture level; expansion
+  into micro-operations is implementation-defined.
+- Stack overflow and underflow detection are not defined in this revision
+  (TBD for v2).
+- No alignment constraints are enforced; unaligned memory access is permitted
+  for stack operations.

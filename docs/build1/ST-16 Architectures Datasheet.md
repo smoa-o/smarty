@@ -156,7 +156,7 @@ all stages return to their initial state and trigger hardware reset.
 ### Footer
 
 Any stages may be optionally fused into a single stage. In fused mode, format parsing is performed
-immediately after instruction fuser within the same pipeline stage, and the fused stages are eliminated
+immediately after instruction stage within the same pipeline stage, and the fused stages are eliminated
 from the pipeline sequence.
 
 ## Communication Protocols

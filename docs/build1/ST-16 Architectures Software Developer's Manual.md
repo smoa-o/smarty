@@ -61,3 +61,8 @@ stages. Multi-thread arbitration (v2) will be defined separately.
 ## Instruction Table - Basic
 
 See `Operation Reference Manual`.
+
+## Flag Effect Table
+
+By default, all instructions do not modify the status bit.
+When possessing Fum., the flag update rule be hereinafter:
