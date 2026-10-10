@@ -176,7 +176,7 @@ participant count and usage scenario:
 ### Short Four-Echo
 
 Two-party protocol for direct communication between internal components
-and the CU.
+and the CU. (Recommend)
 
 ### Three-Party Four-Echo
 
