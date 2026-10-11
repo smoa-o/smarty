@@ -7,11 +7,11 @@
 Brief description of the register file organization: total number of
 registers, width, access ports, and reset behavior.
 
-The register file provides 2 read ports and 2 write ports (2R2W), allowing simultaneous reads by Fetch
+The register file provides 2 read ports and 1 write ports (2R1W), allowing simultaneous reads by Fetch
 (cfg.ip) and Execute (source operand) without port conflict in single-thread mode. IMEM provides 2R2W
 access for similar reasons.
 
-In single-thread mode, the 2R2W organization eliminates read port contention between Fetch and Execute
+In single-thread mode, the 2R1W organization eliminates read port contention between Fetch and Execute
 stages. Multi-thread arbitration (v2) will be defined separately.
 
 ### Register Map Summary
