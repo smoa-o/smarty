@@ -1,1 +1,6 @@
-docs/check.sh
+// License: https://gitee.com/smoa-new/smarty/blob/master/LICENSE
+
+stools/*
+!stools/.keep
+tb/sim/*.vvp
+tb/vcd/*.vcd
