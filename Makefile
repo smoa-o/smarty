@@ -8,6 +8,7 @@ all: test
 test:
 	-mkdir -p tb/sim/ tb/vcd/
 	$(MAKE) testone TESTED=tb_clock
+	$(MAKE) testone TESTED=tb_mem
 
 testone:
 	@$(VERILOG) -I. tb/$(TESTED).v
