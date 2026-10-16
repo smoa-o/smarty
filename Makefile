@@ -9,8 +9,10 @@ test:
 	-mkdir -p tb/sim/ tb/vcd/
 	$(MAKE) testone TESTED=tb_clock
 	$(MAKE) testone TESTED=tb_mem
+	$(MAKE) testone TESTED=tb_regfile
 
 testone:
+	-@mkdir -p tb/sim tb/vcd
 	@$(VERILOG) -I. tb/$(TESTED).v
 	@mv a.out tb/sim/$(TESTED).vvp
 	@printf "\e[34mTested: %s\e[0m\n" $(TESTED)
