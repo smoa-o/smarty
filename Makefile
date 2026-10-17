@@ -10,6 +10,8 @@ test:
 	$(MAKE) testone TESTED=tb_clock
 	$(MAKE) testone TESTED=tb_mem
 	$(MAKE) testone TESTED=tb_regfile
+	$(MAKE) testone TESTED=tb_xregfile
+	$(MAKE) testone TESTED=tb_alu
 
 testone:
 	-@mkdir -p tb/sim tb/vcd

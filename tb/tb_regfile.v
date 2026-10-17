@@ -29,7 +29,8 @@ module tb_regfile;
 	reg [7:0] wdtl;
 	reg rena, renb, wen;
 	wire rfna, rfnb, wfn;
-	reg whswd;
+	reg whswdl;
+	reg whswdh;
 	reg icpu;
 	
 	regfile u_dut (
@@ -50,7 +51,8 @@ module tb_regfile;
 		.wid (wid),
 		.wdtl (wdtl),
 		.wdth (wdth),
-		.whswd (whswd),
+		.whswdl (whswdl),
+		.whswdh (whswdh),
 		.wen (wen),
 		.wfn (wfn),
 
@@ -63,15 +65,15 @@ module tb_regfile;
 
 	initial begin
 		$monitor ({"t=%0t | clk=%b rst=%b clk_en=%b div=%b id=%0d~%0d:%0d dt=%0d~%0d:%0d~%0d en=%b~%b:%b",
-			"fn=%b~%b:%b whswd=%b"}, $time, clk, rst_o, clk_en, div, rida, ridb, wid, rdta, rdtb, wdtl, wdth,
-			rena, renb, wen, rfna, rfnb, wfn, whswd);
+			" fn=%b~%b:%b whswd=%b~%b icpu=%b"}, $time, clk, rst_o, clk_en, div, rida, ridb, wid, rdta,
+			rdtb, wdtl, wdth, rena, renb, wen, rfna, rfnb, wfn, whswdl, whswdh, icpu);
 		$dumpfile ("temp.vcd");
 		$dumpvars (0, tb_regfile);
 		$display ("vcd complete");
 	end
 
 	initial begin
-		$display ("::notice: id/en/fn: r*a~r*b:w* @ dt: r*a~r*b:w*l~w*h");
+		$display ("::notice: id/en/fn: r*a~r*b:w* @ dt: r*a~r*b:w*l~w*h @ whswd: *l~*h");
 
 		rst_i <= 1;
 		clk_en_i <= 1;
@@ -81,7 +83,8 @@ module tb_regfile;
 		wid <= 10;
 		wdtl <= 17;
 		wdth <= 16;
-		whswd <= 1;
+		whswdl <= 1;
+		whswdh <= 1;
 		wen <= 1;
 		repeat (20) @(posedge clk);
 		wen <= 0;
@@ -89,7 +92,7 @@ module tb_regfile;
 		rida <= 10;
 		rena <= 1;
 		repeat (20) @(posedge clk);
-		rena <= 1;
+		rena <= 0;
 
 		$display ("::notice: watch rdta\n:: complete");
 		

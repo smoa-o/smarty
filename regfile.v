@@ -16,13 +16,15 @@ module regfile (
 	input wire [7:0] wid,
 	input wire [7:0] wdtl,
 	input wire [7:0] wdth,
-	input wire whswd, // has word
+	input wire whswdl, // has word
+	input wire whswdh,
 	input wire wen,
 	output reg wfn,
 
 	input wire icpu // is cpu
 );
 	// ax bx cx dx ex fx gx hx bp cfg.ip cfg.csp cfg.dsp cfg.flg cpu.r0 cpu.r1
+	// bw bw bw bw bw bw bw bw bw w w w b w w
 	reg [15:0] regmem [14:0];
 
 	always @(posedge clk or posedge rst) begin
@@ -52,8 +54,8 @@ module regfile (
 						default: ;
 					endcase
 				end
-				regmem[wid][7:0] <= wdtl;
-				if (whswd) regmem[wid][15:8] <= wdth;
+				if (whswdl) regmem[wid][7:0] <= wdtl;
+				if (whswdh) regmem[wid][15:8] <= wdth;
 				wfn <= 1;
 			end
 		end
