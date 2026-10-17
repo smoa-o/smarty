@@ -18,7 +18,7 @@ Smarty is a scalable architecture family; 32 / 64 / 128-bit variants are planned
 
 ## Quick Start
 
-### Prerequistes
+### Prerequisites
 
 - **Icarus Verilog** (v0.10+)
 - **GNU Make** (optional, for build automation)
@@ -37,7 +37,7 @@ The last line should display `all test passed.`.
 
 ## Documentation
 
-ISA maunals are located in `docs/` (4 volumes)
+ISA manuals are located in `docs/` (4 volumes)
 
 | Documentation | Content |
 |--|-- | 
