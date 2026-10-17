@@ -24,4 +24,4 @@ Sponsors may choose whether or not to appear on the acknowledgments list. To add
 
 ---
 
-*Sponsorship is entirely voluntary. Not sponsoring does not affect your ability to use or contribute to this project in any way.*
+*Sponsorship is entirely voluntary. Not sponsoring does not affect your ability to use or contribute to this project in any way. I believe that contribution is more important than money. *
