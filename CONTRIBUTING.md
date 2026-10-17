@@ -100,6 +100,23 @@ the current design has issues or needs extension:
 2. After discussion is approved, modify the manual and code
 3. Rejected changes will include an explanation
 
+## Signing Requirements (DCO)
+
+This project adopts the [Developer Certificate of Origin (DCO)](./DCO).
+
+When submitting code, every commit must include a `Signed-off-by` line:
+
+    git commit -s -m "Your commit message"
+
+This will automatically append the following to the end of the commit message:
+
+    Signed-off-by: Your Name <your.email@example.com>
+
+If you have already committed but forgot to sign off, you can add it retroactively with the following commands:
+
+    git commit --amend -s
+    git rebase HEAD~n -x "git commit --amend -s"
+
 ---
 
 Thank you again for your interest. This project is not simple, but

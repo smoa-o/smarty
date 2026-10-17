@@ -83,6 +83,23 @@ ISA 手册是本项目的基础文档。如果你认为现有设计有问题或�
 2. 讨论通过后再修改手册和代码
 3. 不接受的变更会说明理由
 
+## 签署要求（DCO）
+
+本项目采用 [Developer Certificate of Origin (DCO)](./DCO)。
+
+提交代码时，每个 commit 必须包含 `Signed-off-by` 行：
+
+    git commit -s -m "你的提交信息"
+
+这会自动在 commit message 末尾加上：
+
+    Signed-off-by: 你的名字 <你的邮箱>
+
+如果你已经提交了但没有签名，可以用以下命令补上：
+
+    git commit --amend -s
+    git rebase HEAD~n -x "git commit --amend -s"
+
 ---
 
 再次感谢你的关注。这个项目不简单，但正因如此，每一个贡献都很有分量。
