@@ -89,62 +89,32 @@
 | 0xd | shl | 2 | rr mr mr mm ri mi | Shift destination left by source bits |
 | 0xe | shr | 2 | rr mr mr mm ri mi | Shift destination right by source bits |
 | 0xf | jmp | 1 | r m i | Move cfg.ip to source |
-| 0x10 | jz | 1 | r m i | Jump if zero |
-| 0x11 | jnz | 1 | r m i | Jump if not zero |
-| 0x12 | jc | 1 | r m i | Jump if carry |
-| 0x13 | jnc | 1 | r m i | Jump if not carry |
-| 0x14 | ja | 1 | r m i | Jump if auxillary carry |
-| 0x15 | jna | 1 | r m i | Jump if not auxillary carry |
-| 0x16 | jp | 1 | r m i | Jump if parity |
-| 0x17 | jnp | 1 | r m i | Jump if not parity |
-| 0x18 | ji | 1 | r m i | Jump if interruptable |
-| 0x19 | jni | 1 | r m i | Jump if uninterruptable |
-| 0x1a | stz | 0 | - | Stay zero |
-| 0x1b | stc | 0 | - | Stay carry |
-| 0x1c | sta | 0 | - | Stay auxillary carry |
-| 0x1d | stp | 0 | - | Stay parity |
-| 0x1e | sti | 0 | - | Stay inetrruptable |
-| 0x1f | clz | 0 | - | Close zero |
-| 0x20 | clc | 0 | - | Close carry |
-| 0x21 | cla | 0 | - | Close auxillary carry |
-| 0x22 | clp | 0 | - | Close parity |
-| 0x23 | cli | 0 | - | Close interruptable |
-| 0x24 | call | 1 | r m i | Call source (push and jump) |
-| 0x25 | ret | 0 | - | Return (pop and jump) |
-| 0x26 | int | 1 | r m i | Interrupt source (move cpu.r1 and jump) |
-| 0x27 | iret | 0 | - | Return interrupting (move cpu.r1 and jump) |
-| 0x28 | hlt | 0 | - | Halt when interrupting |
-| 0x29 | in | 2 | rr mr rm mm ri mi ir im ii | In source to I/O Port destination |
-| 0x2a | out | 2 | rr mr rm mm ri mi ir im ii | Out source to I/O Port destination |
+| 0x10 | jc | 1 | r m i | Jump if *someflag* |
+| 0x11 | jnc | 1 | r m i | Jump if not *someflag* |
+| 0x12 | stc | 0 | - | Stay *someflag* |
+| 0x13 | clc | 0 | - | Close *someflag* |
+| 0x14 | set | 1 | r m | Set detsination from *someflag* |
+| 0x14 | get | 1 | r m i | Set *someflag* from source |
+| 0x15 | call | 1 | r m i | Call source (push and jump) |
+| 0x16 | ret | 0 | - | Return (pop and jump) |
+| 0x17 | int | 1 | r m i | Interrupt source (move cpu.r1 and jump) |
+| 0x18 | iret | 0 | - | Return interrupting (move cpu.r1 and jump) |
+| 0x19 | hlt | 0 | - | Halt when interrupting |
+| 0x20 | in | 2 | rr mr rm mm ri mi ir im ii | In source to I/O Port destination |
+| 0x21 | out | 2 | rr mr rm mm ri mi ir im ii | Out source to I/O Port destination |
 
-### Optimized
+### Details
 
-- [Moving Optimizing, 0x2a~0x30] mov <OR-A>
-- [Stack Optimizing, 0x31~0x4d]
-    push cfg.csp, <OR-A>
-    push cfg.dsp, <OR-A>
-    pop <OR-A>, cfg.csp
-    pop <OR-A>, cfg.dsp
-- [Arithmetic Optimizing, 0x4e~0x5e]
-    add <OR-A>, ...
-    sub <OR-A>, ...
-    shl <OR-A>, ...
-    shr <OR-A>, ...
-- [Unary Arithmetic Optimizing, 0x5f~0x6b]
-    inc <OR-A>
-    dec <OR-A>
-    not <OR-A>
-- [Jumping Optimizing, 0x6c~0x78]
-    jmp <OR-A>
-    jz <OR-A>
-    jc <OR-A>
-- [Calling Optimizing, 0x79~0x7f]
-    call <OR-A>
-    int <OR-C>
+#### *someflag*
 
-- Optimized Registers A (OR-A): ax bx cx dx cpu.r0 cpu.r1 bp
-- Optimized Registers B (OR-B): ax bx cx dx cpu.r0 cpu.r1
-- Optimized Registers C (OR-C): ax bx cx cpu.r0 cpu.r1
+| Value | Brief |
+| ----- | ----- |
+| 0 | ZF |
+| 1 | CF |
+| 2 | AF |
+| 3 | PF |
+| 4 | IF |
+| ... | Rsvd. |
 
 ### Width/Type Table
 
