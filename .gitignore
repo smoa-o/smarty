@@ -5,3 +5,4 @@ tb/vcd/*.vcd
 tb/sim/.pass
 tb/sim/.fail
 tb/sim/*.log
+tb/sim/temp.vcd
