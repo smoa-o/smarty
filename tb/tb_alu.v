@@ -79,6 +79,12 @@ module tb_alu;
 		a_i <= 16'd100; b_i <= 16'd37; op_i <= 0; enb_i <= 1;
 		repeat (20) @(posedge clk);
 		enb_i <= 0;
+`ifdef SELFTEST
+		if (x_o != 137) begin
+			$display ("Self-Test Failed: scope: add");
+			$fatal;
+		end
+`endif
 		repeat (20) @(posedge clk);
 
 		// op1: SUB with borrow check
@@ -86,6 +92,12 @@ module tb_alu;
 		a_i <= 16'd50; b_i <= 16'd200; op_i <= 1; enb_i <= 1;
 		repeat (20) @(posedge clk);
 		enb_i <= 0;
+`ifdef SELFTEST
+        if (x_o != 65386 || y_o != 1) begin
+            $display ("Self-Test Failed: scope: sub");
+            $fatal;
+        end
+`endif
 		repeat (20) @(posedge clk);
 
 		// op2: INC
@@ -93,6 +105,12 @@ module tb_alu;
 		a_i <= 16'd65535; op_i <= 2; enb_i <= 1;
 		repeat (20) @(posedge clk);
 		enb_i <= 0;
+`ifdef SELFTEST
+        if (x_o != 0 || y_o != 1 ) begin
+            $display ("Self-Test Failed: scope: inc");
+            $fatal;
+        end
+`endif
 		repeat (20) @(posedge clk);
 
 		// op3: DEC
@@ -100,6 +118,12 @@ module tb_alu;
 		a_i <= 16'd0; op_i <= 3; enb_i <= 1;
 		repeat (20) @(posedge clk);
 		enb_i <= 0;
+`ifdef SELFTEST
+        if (x_o != 65535 || y_o != 1 ) begin
+            $display ("Self-Test Failed: scope: dec");
+            $fatal;
+        end
+`endif
 		repeat (20) @(posedge clk);
 
 		// op4~8: logic
@@ -113,10 +137,16 @@ module tb_alu;
 		end
 
 		// op9: SHL
-		$display ("::notice: SHL word (10) (exp 16)");
+		$display ("::notice: SHL word (10) (ex_op 16)");
 		a_i <= 16'h0001; b_i <= 16'd4; op_i <= 9; enb_i <= 1;
 		repeat (20) @(posedge clk);
 		enb_i <= 0;
+`ifdef SELFTEST
+        if (x_o != 16) begin
+            $display ("Self-Test Failed: scope: shl");
+            $fatal;
+        end
+`endif
 		repeat (20) @(posedge clk);
 
 		// op10: SHR
@@ -124,6 +154,12 @@ module tb_alu;
 		a_i <= 16'h8000; b_i <= 16'd4; op_i <= 10; enb_i <= 1;
 		repeat (20) @(posedge clk);
 		enb_i <= 0;
+`ifdef SELFTEST
+        if (x_o != 2048) begin
+            $display ("Self-Test Failed: scope: shr");
+            $fatal;
+        end
+`endif
 		repeat (20) @(posedge clk);
 
 		// ---- byte mode (whswd=0) ----

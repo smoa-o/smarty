@@ -16,6 +16,10 @@ module tb_clock;
 	    .clk_en(clk_en)
 	);
 
+`ifdef SELFTEST
+	reg rclk_en;
+`endif
+
 	always #5 clk = ~clk;
 
 	initial begin
@@ -37,7 +41,12 @@ module tb_clock;
 	    rst = 0;
 
 `ifdef SELFTEST
-	    ...
+		rclk_en <= clk_en;
+		repeat (3) @(posedge clk);
+		if (rclk_en != ~clk_en) begin
+			$display ("Self-Test Failed: expected clk_en=%b, but inverted. ", ~rclk_en);
+			$fatal;
+		end
 `endif
 	    
 	    repeat (20) @(posedge clk);

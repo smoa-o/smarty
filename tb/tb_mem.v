@@ -149,6 +149,14 @@ module tb;
 
 		while (!clk_en) @(posedge u_clk);
 
+`ifdef SELFTEST
+		repeat (20) @(posedge u_clk);
+		if (rdta != 8'haa) begin
+			$display ("Self-Test Failed: scope: passage A");
+			$fatal;
+		end
+`endif
+
 		// ---- Step 3: read from port B ----
 		$display(":: Step 3 - Read from port B addr 0x10");
 		radb = 32'h10;
@@ -163,6 +171,14 @@ module tb;
 		wait (rtpob == 0);
 		@(posedge u_clk);
 		$display(":: Read B done, rdtb=0x%h rokb=%b", rdtb, rokb);
+
+`ifdef SELFTEST
+        repeat (20) @(posedge u_clk);
+        if (rdta != 8'haa) begin
+            $display ("Self-Test Failed: scope: passage A");
+            $fatal;
+        end
+`endif
 
 		repeat (5) @(posedge u_clk);
 		$display(":: All tests done!");

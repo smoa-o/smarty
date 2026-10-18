@@ -92,6 +92,13 @@ module tb_regfile;
 		repeat (20) @(posedge clk);
 		rena <= 0;
 
+`ifdef SELFTEST
+        if (rdta != 4113) begin
+            $display ("Self-Test Failed: failed");
+            $fatal;
+        end
+`endif
+
 		$display ("::notice: watch rdta\n:: complete");
 		
 		rst_i <= 1;
