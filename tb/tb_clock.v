@@ -35,9 +35,7 @@ module tb_clock;
 	    #200 rst = 1;
 	    @(posedge clk);
 	    rst = 0;
-
 	    repeat (20) @(posedge clk);
-
 		#200 $display("Terminate.");
 		$finish;
 	end
