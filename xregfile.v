@@ -1,3 +1,4 @@
+// Copyright (c) 2026-present SeaMcOfficialAuthority
 module xregfile (
 	input wire clk,
 	input wire rst,

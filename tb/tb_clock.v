@@ -1,3 +1,4 @@
+// Copyright (c) 2026-present SeaMcOfficialAuthority
 `timescale 1ns/1ps
 
 `include "clock.v"

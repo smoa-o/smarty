@@ -1,3 +1,4 @@
+// Copyright (c) 2026-present SeaMcOfficialAuthority
 module alu (
 	input wire clk,
 	input wire rst,

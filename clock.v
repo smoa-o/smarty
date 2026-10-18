@@ -1,5 +1,4 @@
-// License: https://gitee.com/smoa-new/smarty/blob/master/LICENSE
-
+// Copyright (c) 2026-present SeaMcOfficialAuthority
 module clock (
 	input wire clk,
 	input wire rst,
