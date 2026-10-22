@@ -22,7 +22,7 @@ testone:
 	@mv a.out tb/sim/$(TESTED).vvp
 	@printf "\e[34mTested: %s\e[0m\n" $(TESTED)
 	@$(VVP) tb/sim/$(TESTED).vvp
-	@mv temp.vcd tb/vcd/$(TESTED).vcd
+	@mv $(VCD_POS) tb/vcd/$(TESTED).vcd
 ifndef UQST
 	@printf "\n\e[34mIs it successful? \e[0m"
 	@/bin/bash -c 'read -n 1 REPLY; echo; [ "$$REPLY" = "n" ] && exit 100 || exit 0'
