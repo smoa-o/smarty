@@ -103,7 +103,6 @@ module mem (
 	assign roka_w = rokoa;
 	assign rokb_w = rokob;
 
-	// 组合逻辑直接读内存
 	assign rdtoa_w = mem[radoa_w];
 	assign rdtob_w = mem[radob_w];
 
@@ -142,7 +141,6 @@ module mem (
 		end
 	end
 
-	// 输出端口（组合/时序混合）
 	assign radoa = radoa_w;
 	assign radob = radob_w;
 
