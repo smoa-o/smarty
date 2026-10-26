@@ -218,7 +218,7 @@ still not ready, it may return BSY or LBSY (TBSY is not issued here).
 If latency is critically high, device issues TBSY and forcibly clears
 data immediately.
 
-## Signal Table Format
+## Signal Table Format (Recommended)
 
 Extracted directly from Verilog module ports.
 
