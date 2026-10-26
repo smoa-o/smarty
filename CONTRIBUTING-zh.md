@@ -6,7 +6,7 @@
 ## 项目现状
 
 - 当前版本：v0.1（第一个可运行版本开发中）
-- ISA 手册：已完成，共 4 卷，位于 `docs/` 目录下
+- ISA 手册：已完成，共 5 卷，位于 `docs/` 目录下
 - 实现进度：核心取指-译码-执行链路部分完成，复杂指令尚未全部实现
 - 当前最需要的帮助：见下方"我们需要什么"
 
@@ -14,7 +14,8 @@
 
 如果你打算参与开发，**请按顺序阅读以下文档**（位于 `docs/` 目录下）：
 
-1. **ST-16 Architectures Datasheet** —— 芯片概述、架构特性、基本参数（先看这个建立整体概念）
+1. **ST-16 Architectures Roadmap** -- 总架构路线图 （先看这个建立整体概念）
+1. **ST-16 Architectures Datasheet** —— 芯片概述、架构特性、基本参数
 2. **ST-16 Architectures Software Developer's Manual** —— 编程模型、寄存器组织、内存模型、异常机制
 3. **ST-16 Architectures Operation Reference Manual** —— 指令操作参考，每条指令的完整语义
 4. **ST-16 Architectures Electronic Datasheet** —— 电气特性、硬件接口（实现层面重点关注）

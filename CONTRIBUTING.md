@@ -18,13 +18,14 @@ to join.
 If you plan to contribute, **please read the following documents in order**
 (located in the `docs/` directory):
 
-1. **ST-16 Architectures Datasheet** — Chip overview, architectural
-   features, basic parameters (start here to build a general mental model)
-2. **ST-16 Architectures Software Developer's Manual** — Programming model,
+1. **ST-16 Architectures Roadmap** -- Map overview, architectual (start here)
+2. **ST-16 Architectures Datasheet** — Chip overview, architectural
+   features, basic parameters (then read here to build a general mental model)
+3. **ST-16 Architectures Software Developer's Manual** — Programming model,
    register organization, memory model, exception mechanism
-3. **ST-16 Architectures Operation Reference Manual** — Instruction
+4. **ST-16 Architectures Operation Reference Manual** — Instruction
    operation reference, complete semantics for every instruction
-4. **ST-16 Architectures Electronic Datasheet** — Electrical characteristics,
+5. **ST-16 Architectures Electronic Datasheet** — Electrical characteristics,
    hardware interfaces (key focus area for implementation work)
 
 We do not recommend diving straight into the code. The complexity of this
