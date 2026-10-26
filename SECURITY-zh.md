@@ -13,7 +13,7 @@
 
 如果你在 ST-16 / Smarty 项目中发现了安全漏洞，请通过以下方式私下报告：
 
-- **邮箱**：mailto:sauthm\_2015@qq.com
+- **邮箱**：[Click Here](mailto:sauthm_2015@qq.com)
 - **QQ 私聊**：联系维护者（QQ群 183241333 内私聊管理员）
 
 请在报告中包含以下信息：
