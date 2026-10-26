@@ -10,7 +10,7 @@ Smarty is a scalable architecture family; 32 / 64 / 128-bit variants are planned
 
 ## What is this
 
-- **ISA**: Self-designed CISC instruction set, 4-volume specification
+- **ISA**: Self-designed CISC instruction set, 5-volume specification
 - **Implementation**: CPU core written in Verilog
 - **Status**: *build1* in-development
 - **Goal**: Boot an operating system
