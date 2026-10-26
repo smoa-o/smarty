@@ -18,11 +18,12 @@ Default at **Datasheet**.
 At **Electronic Datasheet**.
 
 ## Exception and Recovery
-At **Datasheet** (Weaked).<br>
+At **Datasheet** (Weaked). <br>
 At **Electronic Datasheet** (stronged).
 
 
 ## Intruction Encoding
+At **Operation Reference Manual**. <br>
 Referred to as **Datasheet**.
 
 
@@ -37,10 +38,6 @@ Related to *Register File*.
 
 ## Electrical and Timing Characteristics
 At **Electronic Datasheet**.
-
-
-## Intruction Encoding
-At **Operation Reference Manual**.
 
 
 ## Introduction Table
