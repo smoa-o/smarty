@@ -65,7 +65,7 @@ module fpd (
 					if (rrgack) begin
 						clk_o <= 0;
 						exp_o <= 50;
-						stp_i <= 3;
+						stp_o <= 3;
 					end else if (exp_i == clk_i) begin
 						err <= 1;
 						stp_o <= 2;
@@ -89,33 +89,43 @@ module fpd (
 						stp_o <= 2;
 					end
 				end 4: begin
-					if (rrgack) begin
+					if (rmmack) begin
 						clk_o <= 0;
 						exp_o <= 50;
-						stp_o <= 1;
+						stp_o <= 5;
 					end else if (exp_i == clk_i) begin
 						err <= 1;
 						stp_o <= 2;
 					end
 				end 5: begin
-					if (rrgfin) begin
+					if (rmmsp != 0 && (rmmfin || clk_i == exp_i)) begin
+						clk_o <= 0;
+						exp_o <= 50;
+						stp_o <= 5;
+					end if (rmmfin) begin
 						dat_o <= rmmdt;
 						rmmry <= 1;
 						rmmen <= 0;
 						rmmsyn <= 0;
 						
 						{inst, hasvn} <= dat_o;
-						if (hasvn) stp_o <= 7;
+						if (hasvn) stp_o <= 6;
 						else begin
-							fin <= 1;
-							stp_o <= 6;
+							stp_o <= // TODO
 						end
 					end else if (clk_i == exp_i) begin
 						err <= 1;
 						stp_o <= 2;
 					end
 				end 6: begin
-					
+					rmmad <= rrgdt + 1;
+					rmmln <= 1;
+					rmmid <= 0;
+					clk_o <= 0;
+					exp_o <= 10;
+					rmmen <= 1;
+					rmmsyn <= 1;
+					stp_o <= 4;
 				end
 			end
 			clk_o <= clk_o + 1;
